@@ -29,7 +29,7 @@ IMEN324(00) - Simulation Modeling and Analysis 2019 @KoreaUniversity
 
   - Mean interarrival time: 5.000 minutes
   - Mean service titme: 3.000 minutes
-  - Length of the simulation : 1400.000 minutes
+  - Length of the simulation : 1440.000 minutes
 
   ```shell
   # Assignments/Assignment#1/mm1alt
@@ -65,5 +65,3 @@ IMEN324(00) - Simulation Modeling and Analysis 2019 @KoreaUniversity
   ```shell
   ./main
   ```
-
-컾마일하는건 어차피 gcc라는 걸로 해야해서 에디터 상관없음
