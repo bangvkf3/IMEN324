@@ -14,6 +14,9 @@ int next_event_type, num_custs_delayed, num_delays_required, num_events,
 float area_num_in_q, area_server_status, mean_interarrival, mean_service,
     sim_time, time_arrival[Q_LIMIT + 1], time_last_event, time_next_event[3],
     total_of_delays;
+int max_num_in_q;
+float max_delay_in_q, time_start_service, max_time_in_system, num_delay_gt_1;
+
 FILE *infile, *outfile;
 
 void initialize(void);
@@ -75,6 +78,12 @@ int main() /* Main function. */
             depart();
             break;
         }
+
+        /* Update the maximum queue length */
+        if (num_in_q > max_num_in_q)
+        {
+            max_num_in_q = num_in_q;
+        }
     }
 
     /* Invoke the report generator and end the simulation. */
@@ -105,6 +114,10 @@ void initialize(void) /* Initialization function. */
     total_of_delays = 0.0;
     area_num_in_q = 0.0;
     area_server_status = 0.0;
+    max_num_in_q = 0;
+    max_delay_in_q = 0.0;
+    max_time_in_system = 0.0;
+    num_delay_gt_1 = 0.0;
 
     /* Initialize event list.  Since no customers are present, the departure
        (service completion) event is eliminated from consideration. */
@@ -194,18 +207,30 @@ void arrive(void) /* Arrival event function. */
         /* Schedule a departure (service completion). */
 
         time_next_event[2] = sim_time + expon(mean_service);
+
+        /* Log the time to start service */
+        time_start_service = sim_time;
     }
 }
 
 void depart(void) /* Departure event function. */
 {
     int i;
-    float delay;
+    float delay, time_in_system;
+
+    /* Update the time in the system */
+    time_in_system = sim_time - time_start_service;
+
+    /* Update the maximum time in the system */
+    if (time_in_system > max_time_in_system)
+    {
+        max_time_in_system = time_in_system;
+    }
 
     /* Check to see whether the queue is empty. */
-
     if (num_in_q == 0)
     {
+
         /* The queue is empty so make the server idle and eliminate the
            departure (service completion) event from consideration. */
 
@@ -226,10 +251,25 @@ void depart(void) /* Departure event function. */
         delay = sim_time - time_arrival[1];
         total_of_delays += delay;
 
+        /* Update the maximum delay in queue */
+        if (delay > max_delay_in_q)
+        {
+            max_delay_in_q = delay;
+        }
+
+        /* Update the number of customer having a delay in queue > 1 minute */
+        if (delay > 1.0)
+        {
+            ++num_delay_gt_1;
+        }
+
         /* Increment the number of customers delayed, and schedule departure. */
 
         ++num_custs_delayed;
         time_next_event[2] = sim_time + expon(mean_service);
+
+        /* Log the time to start service */
+        time_start_service = time_arrival[1];
 
         /* Move each customer in queue (if any) up one place. */
 
@@ -248,6 +288,19 @@ void report(void) /* Report generator function. */
             area_num_in_q / sim_time);
     fprintf(outfile, "Server utilization%15.3f\n\n",
             area_server_status / sim_time);
+    fprintf(outfile, "Time-average number in system%15.3f\n\n",
+            (area_num_in_q + area_server_status) / sim_time);
+    fprintf(outfile, "Average total time in the system%15.3f\n\n",
+            (total_of_delays + area_server_status) / num_custs_delayed);
+    fprintf(outfile, "Maximum queue length%12d\n\n",
+            max_num_in_q);
+    fprintf(outfile, "Maximum delay in queue%15.3f\n\n",
+            max_delay_in_q);
+    fprintf(outfile, "Maximum time in the system%15.3f\n\n",
+            max_time_in_system);
+    fprintf(outfile, "Proportion of customers having a delay in queue > 1 minute%15.3f\n\n",
+            num_delay_gt_1 / num_custs_delayed);
+
     fprintf(outfile, "Time simulation ended%12.3f minutes", sim_time);
 }
 
