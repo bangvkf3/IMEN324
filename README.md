@@ -83,3 +83,16 @@ IMEN324(00) - Simulation Modeling and Analysis 2019 @KoreaUniversity
   ```shell
   ./main
   ```
+
+- Exercise 1.17
+
+  - Inventory system with express orders
+
+  ```shell
+  # Assignments/Assignment#2/inv
+  gcc lcgrand.c inv_express.c -o main
+  ```
+
+  ```shell
+  ./main
+  ```
