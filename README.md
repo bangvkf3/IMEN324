@@ -65,3 +65,21 @@ IMEN324(00) - Simulation Modeling and Analysis 2019 @KoreaUniversity
   ```shell
   ./main
   ```
+
+- Exercise 1.7
+
+  - Time-average number in the system
+  - Average total time in the system
+  - Maximum queue length
+  - Maximum delay in queue
+  - Maximum time in the system
+  - Proportion of customers having a delay in queue in excess of 1 minute
+
+  ```shell
+  # Assignments/Assignment#2/mm1
+  gcc lcgrand.c inv.c -o main
+  ```
+
+  ```shell
+  ./main
+  ```
