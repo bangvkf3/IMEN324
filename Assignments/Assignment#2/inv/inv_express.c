@@ -309,7 +309,7 @@ int random_integer(float prob_distrib[]) /* Random integer generation
 
     for (i = 1; u >= prob_distrib[i]; ++i)
         ;
-    return 2 * i;
+    return i;
 }
 
 float uniform(float a, float b) /* Uniform variate generation function. */
