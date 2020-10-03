@@ -3,7 +3,7 @@ IMEN324(00) - Simulation Modeling and Analysis 2019 @KoreaUniversity
 ## Requirements
 
 - Textbook : Averill M. Law, Simulation Modeling and Analysis (5th Edition), McGraw-Hill, 2015
-- Sample code : [www.mhhe.com/law](www.mhhe.com/law)
+- Sample code : [www.mhhe.com/law](http://www.mhhe.com/law)
   - mm1.c
   - mm1alt.c
   - inv.c
@@ -96,3 +96,7 @@ IMEN324(00) - Simulation Modeling and Analysis 2019 @KoreaUniversity
   ```shell
   ./main
   ```
+
+- M/M/1, Single-Server Queueing System(𝞴, 𝞵, n)
+
+- Time-shared computer model
