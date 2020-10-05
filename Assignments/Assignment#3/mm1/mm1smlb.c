@@ -1,20 +1,20 @@
 /* External definitions for single-server queueing system using simlib. */
 
-#include "simlib.h"             /* Required for use of simlib.c. */
+#include "simlib.h" /* Required for use of simlib.c. */
 
-#define EVENT_ARRIVAL        1  /* Event type for arrival. */
-#define EVENT_DEPARTURE      2  /* Event type for departure. */
-#define LIST_QUEUE           1  /* List number for queue. */
-#define LIST_SERVER          2  /* List number for server. */
-#define SAMPST_DELAYS        1  /* sampst variable for delays in queue. */
-#define STREAM_INTERARRIVAL  1  /* Random-number stream for interarrivals. */
-#define STREAM_SERVICE       2  /* Random-number stream for service times. */
+#define EVENT_ARRIVAL 1       /* Event type for arrival. */
+#define EVENT_DEPARTURE 2     /* Event type for departure. */
+#define LIST_QUEUE 1          /* List number for queue. */
+#define LIST_SERVER 2         /* List number for server. */
+#define SAMPST_DELAYS 1       /* sampst variable for delays in queue. */
+#define STREAM_INTERARRIVAL 1 /* Random-number stream for interarrivals. */
+#define STREAM_SERVICE 2      /* Random-number stream for service times. */
 
 /* Declare non-simlib global variables. */
 
-int   num_custs_delayed, num_delays_required;
+int num_custs_delayed, num_delays_required;
 float mean_interarrival, mean_service;
-FILE  *infile, *outfile;
+FILE *infile, *outfile;
 
 /* Declare non-simlib functions. */
 
@@ -23,12 +23,11 @@ void arrive(void);
 void depart(void);
 void report(void);
 
-
-main()  /* Main function. */
+int main() /* Main function. */
 {
     /* Open input and output files. */
 
-    infile  = fopen("mm1smlb.in",  "r");
+    infile = fopen("mm1smlb.in", "r");
     outfile = fopen("mm1smlb.out", "w");
 
     /* Read input parameters. */
@@ -50,7 +49,7 @@ main()  /* Main function. */
 
     /* Set maxatr = max(maximum number of attributes per record, 4) */
 
-    maxatr = 4;  /* NEVER SET maxatr TO BE SMALLER THAN 4. */
+    maxatr = 4; /* NEVER SET maxatr TO BE SMALLER THAN 4. */
 
     /* Initialize the model. */
 
@@ -58,7 +57,8 @@ main()  /* Main function. */
 
     /* Run the simulation while more delays are still needed. */
 
-    while (num_custs_delayed < num_delays_required) {
+    while (num_custs_delayed < num_delays_required)
+    {
 
         /* Determine the next event. */
 
@@ -66,13 +66,14 @@ main()  /* Main function. */
 
         /* Invoke the appropriate event function. */
 
-        switch (next_event_type) {
-            case EVENT_ARRIVAL:
-                arrive();
-                break;
-            case EVENT_DEPARTURE:
-                depart();
-                break;
+        switch (next_event_type)
+        {
+        case EVENT_ARRIVAL:
+            arrive();
+            break;
+        case EVENT_DEPARTURE:
+            depart();
+            break;
         }
     }
 
@@ -86,8 +87,7 @@ main()  /* Main function. */
     return 0;
 }
 
-
-void init_model(void)  /* Initialization function. */
+void init_model(void) /* Initialization function. */
 {
     num_custs_delayed = 0;
 
@@ -95,8 +95,7 @@ void init_model(void)  /* Initialization function. */
                    EVENT_ARRIVAL);
 }
 
-
-void arrive(void)  /* Arrival event function. */
+void arrive(void) /* Arrival event function. */
 {
     /* Schedule next arrival. */
 
@@ -106,7 +105,8 @@ void arrive(void)  /* Arrival event function. */
     /* Check to see whether server is busy (i.e., list SERVER contains a
        record). */
 
-    if (list_size[LIST_SERVER] == 1) {
+    if (list_size[LIST_SERVER] == 1)
+    {
 
         /* Server is busy, so store time of arrival of arriving customer at end
            of list LIST_QUEUE. */
@@ -115,7 +115,8 @@ void arrive(void)  /* Arrival event function. */
         list_file(LAST, LIST_QUEUE);
     }
 
-    else {
+    else
+    {
 
         /* Server is idle, so start service on arriving customer, who has a
            delay of zero.  (The following statement IS necessary here.) */
@@ -137,8 +138,7 @@ void arrive(void)  /* Arrival event function. */
     }
 }
 
-
-void depart(void)  /* Departure event function. */
+void depart(void) /* Departure event function. */
 {
     /* Check to see whether queue is empty. */
 
@@ -151,7 +151,8 @@ void depart(void)  /* Departure event function. */
 
         list_remove(FIRST, LIST_SERVER);
 
-    else {
+    else
+    {
 
         /* The queue is nonempty, so remove the first customer from the queue,
            register delay, increment the number of customers delayed, and
@@ -165,8 +166,7 @@ void depart(void)  /* Departure event function. */
     }
 }
 
-
-void report(void)  /* Report generator function. */
+void report(void) /* Report generator function. */
 {
     /* Get and write out estimates of desired measures of performance. */
 
@@ -176,4 +176,3 @@ void report(void)  /* Report generator function. */
     out_filest(outfile, LIST_QUEUE, LIST_SERVER);
     fprintf(outfile, "\nTime simulation ended:%12.3f minutes\n", sim_time);
 }
-

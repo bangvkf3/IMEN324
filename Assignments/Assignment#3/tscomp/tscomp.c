@@ -1,22 +1,22 @@
 /* External definitions for time-shared computer model. */
 
-#include "simlib.h"               /* Required for use of simlib.c. */
+#include "simlib.h" /* Required for use of simlib.c. */
 
-#define EVENT_ARRIVAL          1  /* Event type for arrival of job to CPU. */
-#define EVENT_END_CPU_RUN      2  /* Event type for end of a CPU run. */
-#define EVENT_END_SIMULATION   3  /* Event type for end of the simulation. */
-#define LIST_QUEUE             1  /* List number for CPU queue. */
-#define LIST_CPU               2  /* List number for CPU. */
-#define SAMPST_RESPONSE_TIMES  1  /* sampst variable for response times. */
-#define STREAM_THINK           1  /* Random-number stream for think times. */
-#define STREAM_SERVICE         2  /* Random-number stream for service times. */
+#define EVENT_ARRIVAL 1         /* Event type for arrival of job to CPU. */
+#define EVENT_END_CPU_RUN 2     /* Event type for end of a CPU run. */
+#define EVENT_END_SIMULATION 3  /* Event type for end of the simulation. */
+#define LIST_QUEUE 1            /* List number for CPU queue. */
+#define LIST_CPU 2              /* List number for CPU. */
+#define SAMPST_RESPONSE_TIMES 1 /* sampst variable for response times. */
+#define STREAM_THINK 10         /* Random-number stream for think times. */
+#define STREAM_SERVICE 20       /* Random-number stream for service times. */
 
 /* Declare non-simlib global variables. */
 
-int   min_terms, max_terms, incr_terms, num_terms, num_responses,
-      num_responses_required, term;
+int min_terms, max_terms, incr_terms, num_terms, num_responses,
+    num_responses_required, term;
 float mean_think, mean_service, quantum, swap;
-FILE  *infile, *outfile;
+FILE *infile, *outfile;
 
 /* Declare non-simlib functions. */
 
@@ -25,12 +25,11 @@ void start_CPU_run(void);
 void end_CPU_run(void);
 void report(void);
 
-
-main()  /* Main function. */
+int main() /* Main function. */
 {
     /* Open input and output files. */
 
-    infile  = fopen("tscomp.in",  "r");
+    infile = fopen("tscomp.in", "r");
     outfile = fopen("tscomp.out", "w");
 
     /* Read input parameters. */
@@ -57,7 +56,8 @@ main()  /* Main function. */
     /* Run the simulation varying the number of terminals. */
 
     for (num_terms = min_terms; num_terms <= max_terms;
-         num_terms += incr_terms) {
+         num_terms += incr_terms)
+    {
 
         /* Initialize simlib */
 
@@ -65,7 +65,7 @@ main()  /* Main function. */
 
         /* Set maxatr = max(maximum number of attributes per record, 4) */
 
-        maxatr = 4;  /* NEVER SET maxatr TO BE SMALLER THAN 4. */
+        maxatr = 4; /* NEVER SET maxatr TO BE SMALLER THAN 4. */
 
         /* Initialize the non-simlib statistical counter. */
 
@@ -79,7 +79,8 @@ main()  /* Main function. */
         /* Run the simulation until it terminates after an end-simulation event
            (type EVENT_END_SIMULATION) occurs. */
 
-        do {
+        do
+        {
 
             /* Determine the next event. */
 
@@ -87,19 +88,20 @@ main()  /* Main function. */
 
             /* Invoke the appropriate event function. */
 
-            switch (next_event_type) {
-                case EVENT_ARRIVAL:
-                    arrive();
-                    break;
-                case EVENT_END_CPU_RUN:
-                    end_CPU_run();
-                    break;
-                case EVENT_END_SIMULATION:
-                    report();
-                    break;
+            switch (next_event_type)
+            {
+            case EVENT_ARRIVAL:
+                arrive();
+                break;
+            case EVENT_END_CPU_RUN:
+                end_CPU_run();
+                break;
+            case EVENT_END_SIMULATION:
+                report();
+                break;
             }
 
-        /* If the event just executed was not the end-simulation event (type
+            /* If the event just executed was not the end-simulation event (type
            EVENT_END_SIMULATION), continue simulating.  Otherwise, end the
            simulation. */
 
@@ -112,8 +114,7 @@ main()  /* Main function. */
     return 0;
 }
 
-
-void arrive(void)  /* Event function for arrival of job at CPU after think
+void arrive(void) /* Event function for arrival of job at CPU after think
                       time. */
 {
 
@@ -133,8 +134,7 @@ void arrive(void)  /* Event function for arrival of job at CPU after think
         start_CPU_run();
 }
 
-
-void start_CPU_run(void)  /* Non-event function to start a CPU run of a job. */
+void start_CPU_run(void) /* Non-event function to start a CPU run of a job. */
 {
     float run_time;
 
@@ -165,8 +165,7 @@ void start_CPU_run(void)  /* Non-event function to start a CPU run of a job. */
     event_schedule(sim_time + run_time, EVENT_END_CPU_RUN);
 }
 
-
-void end_CPU_run(void)  /* Event function to end a CPU run of a job. */
+void end_CPU_run(void) /* Event function to end a CPU run of a job. */
 {
     /* Remove the job from the CPU. */
 
@@ -174,7 +173,8 @@ void end_CPU_run(void)  /* Event function to end a CPU run of a job. */
 
     /* Check to see whether this job requires more CPU time. */
 
-    if (transfer[2] > 0.0) {
+    if (transfer[2] > 0.0)
+    {
 
         /* This job requires more CPU time, so place it at the end of the queue
            and start the first job in the queue. */
@@ -183,7 +183,8 @@ void end_CPU_run(void)  /* Event function to end a CPU run of a job. */
         start_CPU_run();
     }
 
-    else {
+    else
+    {
 
         /* This job is finished, so collect response-time statistics and send it
            back to its terminal, i.e., schedule another arrival from the same
@@ -213,12 +214,11 @@ void end_CPU_run(void)  /* Event function to end a CPU run of a job. */
                another job. */
 
             if (list_size[LIST_QUEUE] > 0)
-                start_CPU_run();
+            start_CPU_run();
     }
 }
 
-
-void report(void)  /* Report generator function. */
+void report(void) /* Report generator function. */
 {
     /* Get and write out estimates of desired measures of performance. */
 
@@ -226,4 +226,3 @@ void report(void)  /* Report generator function. */
             sampst(0.0, -SAMPST_RESPONSE_TIMES), filest(LIST_QUEUE),
             filest(LIST_CPU));
 }
-

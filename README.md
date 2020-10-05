@@ -97,6 +97,22 @@ IMEN324(00) - Simulation Modeling and Analysis 2019 @KoreaUniversity
   ./main
   ```
 
-- M/M/1, Single-Server Queueing System(𝞴, 𝞵, n)
+- Time-shared computer model with the simulation libarary
 
-- Time-shared computer model
+  - Minimum number of terminals: 55
+  - Maximum number of terminals: 65
+  - Incremental number of terminals: 1
+  - Mean think time: 25 seconds
+  - Mean service time: 0.8 seconds
+  - Quantum: 0.1 seconds
+  - Swap time: 0.015 seconds
+  - Number of job processed: 1000
+
+  ```shell
+  # Assignments/Assignment#3/tscomp
+  gcc simlib.c tscomp.c -o main
+  ```
+
+  ```shell
+  ./main
+  ```
